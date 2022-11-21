@@ -4,11 +4,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import MessageList from '../components/MessageList';
+import { Payload } from '../api/Client';
 
 
 
 const ChatPage : FC = () => {
     const [message, setMessage] = useState("");
+    const [messages, setMessages] = useState<Payload[]>([]);
     const wsClient = useRef<Client| null>(null);
 
     useEffect(() => {
@@ -25,10 +27,16 @@ const ChatPage : FC = () => {
         setMessage("");
     };
 
+    useEffect(() => {
+        if (wsClient.current) {
+            setMessages(wsClient.current?.messages);
+        }
+    }, [wsClient.current?.messages]);
+
     return (
         <div>
             <h1>Chat</h1>
-            <MessageList messages={wsClient.current?.messages || []}/>
+            <MessageList clientID={wsClient.current?.clientID || ''} messages={messages || []}/>
             <div style={{display:"flex"}}>
             <TextField
                 id="filled-textarea"

@@ -1,13 +1,16 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
+import Client, {Payload} from '../api/Client';
 
 type Props = {
-    message: string;
+    clientID: string;
+    message: Payload;
 }
-const Message: React.FC<Props> = ( {message} : Props) => {
+const Message: React.FC<Props> = ( {clientID, message} : Props) => {
+
     return (
         <div className="Message">
-            {message}
+            {message.ClientID == clientID ? "My" : "Their"}: {message.Contents}
         </div>
     );
 };

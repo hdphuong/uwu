@@ -1,4 +1,4 @@
-interface payload {
+export interface Payload {
     Type: "init" | "message";
     Contents: string;
     ClientID?: string;
@@ -6,18 +6,18 @@ interface payload {
 
 class Client {
     socket: WebSocket;
-    messages: string[] = [];
+    messages: Payload[] = [];
     clientID: string = '';
 
     constructor () {
         this.socket = new WebSocket('ws://localhost:8080/ws');
         this.socket.onmessage = (msg) => {
-            const message : payload = JSON.parse(msg.data);
+            const message : Payload = JSON.parse(msg.data);
             console.log(message);
             if (message.Type === "init") {
                 this.clientID = message.Contents;
             } else {
-                this.messages.push(message.Contents);
+                this.messages.push(message);
                 console.log("on message", msg);
             }
         }

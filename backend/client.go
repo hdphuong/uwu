@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
@@ -29,6 +30,8 @@ type Message struct {
 	Type     string
 	ClientID string
 }
+
+const pingPeriod = 10 * time.Second
 
 func (c *Client) read() {
 	defer func() {
@@ -59,19 +62,21 @@ func (c *Client) write() {
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
-			w, err := c.conn.NextWriter(websocket.TextMessage)
-			if err != nil {
-				return
-			}
+			/*
+				w, err := c.conn.NextWriter(websocket.TextMessage)
+				if err != nil {
+					return
+				}
+			*/
 			fmt.Print("Writing message: ")
 			fmt.Println(string(message))
-			w.Write(message)
+			c.conn.WriteMessage(websocket.TextMessage, []byte(message))
 			for i := 0; i < len(c.send); i++ {
 				//w.Write([]byte("\n"))
-				w.Write(<-c.send)
+				c.conn.WriteMessage(websocket.TextMessage, []byte(message))
+				//w.Write(<-c.send)
 			}
 		}
-
 	}
 }
 
