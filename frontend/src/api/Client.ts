@@ -1,5 +1,5 @@
 export interface Payload {
-    Type: "init" | "message";
+    Type: "init" | "message" | "cursor";
     Contents: string;
     ClientID?: string;
   }
@@ -15,7 +15,9 @@ class Client {
             const message : Payload = JSON.parse(msg.data);
             console.log(message);
             if (message.Type === "init") {
-                this.clientID = message.Contents;
+                if (this.clientID === '' ){
+                    this.clientID = message.Contents;
+                }
             } else {
                 this.messages.push(message);
                 console.log("on message", msg);
@@ -34,14 +36,20 @@ class Client {
     }
 
     private prepareMessage (message: string) {
-        const payload = {Contents: message, Type: "message", ClientID: this.clientID};
+        const payload : Payload = {Contents: message, Type: "message", ClientID: this.clientID};
+        this.messages.push(payload);
         return JSON.stringify(payload);
     }
     
     public sendToServer = (msg: string) => {
         this.socket.send(this.prepareMessage(msg));
-        console.log("sending msg: ", this.prepareMessage(msg));
+        console.log("sent message", msg);
         console.log(this.socket?.readyState);
+    }
+
+    public sendCursorToServer = (x: number, y: number) => {
+        const payload : Payload = {Contents: `${x},${y}`, Type: "cursor", ClientID: this.clientID};
+        this.socket.send(JSON.stringify(payload));
     }
 }
 

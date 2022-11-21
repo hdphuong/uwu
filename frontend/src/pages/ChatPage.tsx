@@ -12,11 +12,10 @@ const ChatPage : FC = () => {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState<Payload[]>([]);
     const wsClient = useRef<Client| null>(null);
-
     useEffect(() => {
         function cleanup() {
             wsClient.current?.socket.close();
-          }
+        }
         wsClient.current = new Client();
         return cleanup;
     }, []);
@@ -27,11 +26,11 @@ const ChatPage : FC = () => {
         setMessage("");
     };
 
-    useEffect(() => {
-        if (wsClient.current) {
-            setMessages(wsClient.current?.messages);
+    useEffect(() =>{
+        if (wsClient) {
+            setMessages(wsClient.current?.messages || []);
         }
-    }, [wsClient.current?.messages]);
+    }, [wsClient.current?.socket.onmessage]);
 
     return (
         <div>
