@@ -20,9 +20,10 @@ var upgrader = websocket.Upgrader{
 }
 
 type Client struct {
-	server *Server
-	conn   *websocket.Conn
-	send   chan []byte
+	server   *Server
+	conn     *websocket.Conn
+	send     chan []byte
+	clientID *string
 }
 
 type Message struct {
@@ -87,9 +88,10 @@ func serveWs(server *Server, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := &Client{server, conn, make(chan []byte, 256)}
+	clientID := uuid.New().String()
+	client := &Client{server, conn, make(chan []byte, 256), &clientID}
 	client.server.register <- client
-	message := &Message{Type: "init", ClientID: "server", Contents: uuid.New().String()}
+	message := &Message{Type: "init", ClientID: "server", Contents: clientID}
 	b, err := json.Marshal(message)
 	if err != nil {
 		log.Printf("Error marshalling message: %v", err)
