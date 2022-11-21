@@ -1,8 +1,11 @@
 import { color } from "@mui/system";
 import React from "react";
 import useMousePosition from "./useMousePosition";
-const Cursor = () => {
-  const { clientX, clientY } = useMousePosition();
+type CursorProps = {
+    clientX: number;
+    clientY: number;
+}
+const OtherCursors : React.FC<CursorProps> = ({clientX, clientY} : CursorProps) => {
   
   return (
     <div 
@@ -14,6 +17,7 @@ const Cursor = () => {
         right: 0,
         zIndex: 9999,
         pointerEvents: "none",
+        color: "purple",
       }}
     >
       <svg
@@ -31,11 +35,10 @@ const Cursor = () => {
           cx="25"
           cy="25"
           r="8"
-          fill="purple"
         />
       </svg>
     </div>
   );
 };
 
-export default Cursor;
+export default OtherCursors;

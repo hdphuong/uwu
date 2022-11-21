@@ -19,11 +19,17 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+type Position struct {
+	x int
+	y int
+}
+
 type Client struct {
 	server   *Server
 	conn     *websocket.Conn
 	send     chan []byte
 	clientID *string
+	position *Position
 }
 
 type Message struct {
@@ -48,6 +54,14 @@ func (c *Client) read() {
 
 		fmt.Print("Reading message: ")
 		fmt.Println(string(message))
+
+		var msg Message
+		json.Unmarshal(message, &msg)
+		if msg.Type == "cursor" {
+			var pos Position
+			json.Unmarshal([]byte(msg.Contents), &pos)
+			c.position = &pos
+		}
 		c.server.broadcast <- message
 	}
 }
@@ -89,7 +103,7 @@ func serveWs(server *Server, w http.ResponseWriter, r *http.Request) {
 	}
 
 	clientID := uuid.New().String()
-	client := &Client{server, conn, make(chan []byte, 256), &clientID}
+	client := &Client{server, conn, make(chan []byte, 256), &clientID, nil}
 	client.server.register <- client
 	message := &Message{Type: "init", ClientID: "server", Contents: clientID}
 	b, err := json.Marshal(message)
