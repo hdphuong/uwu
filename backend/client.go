@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
 
@@ -23,7 +25,7 @@ type Client struct {
 }
 
 type Message struct {
-	Message  string
+	Contents string
 	Type     string
 	ClientID string
 }
@@ -82,7 +84,13 @@ func serveWs(server *Server, w http.ResponseWriter, r *http.Request) {
 
 	client := &Client{server, conn, make(chan []byte, 256)}
 	client.server.register <- client
-	client.send <- []byte("Hello from the server")
+	message := &Message{Type: "init", ClientID: "server", Contents: uuid.New().String()}
+	b, err := json.Marshal(message)
+	if err != nil {
+		log.Printf("Error marshalling message: %v", err)
+		return
+	}
+	client.send <- []byte(string(b))
 
 	go client.write()
 	go client.read()

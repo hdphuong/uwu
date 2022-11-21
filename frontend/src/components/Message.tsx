@@ -1,8 +1,13 @@
 
+import React from 'react';
 
-const Message = () => {
+type Props = {
+    message: string;
+}
+const Message: React.FC<Props> = ( {message} : Props) => {
     return (
         <div className="Message">
+            {message}
         </div>
     );
 };

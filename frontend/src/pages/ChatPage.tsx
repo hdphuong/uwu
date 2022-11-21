@@ -3,6 +3,7 @@ import React, {FC, useEffect, useRef, useState} from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
+import MessageList from '../components/MessageList';
 
 
 
@@ -27,12 +28,12 @@ const ChatPage : FC = () => {
     return (
         <div>
             <h1>Chat</h1>
+            <MessageList messages={wsClient.current?.messages || []}/>
             <div style={{display:"flex"}}>
             <TextField
                 id="filled-textarea"
                 label="Enter message"
                 value={message}
-                multiline
                 variant="filled"
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => {

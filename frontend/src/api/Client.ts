@@ -1,9 +1,25 @@
+interface payload {
+    Type: "init" | "message";
+    Contents: string;
+    ClientID?: string;
+  }
+
 class Client {
     socket: WebSocket;
+    messages: string[] = [];
+    clientID: string = '';
+
     constructor () {
         this.socket = new WebSocket('ws://localhost:8080/ws');
         this.socket.onmessage = (msg) => {
-            console.log("on message", msg);
+            const message : payload = JSON.parse(msg.data);
+            console.log(message);
+            if (message.Type === "init") {
+                this.clientID = message.Contents;
+            } else {
+                this.messages.push(message.Contents);
+                console.log("on message", msg);
+            }
         }
         this.socket.onopen = () => {
             console.log("on open", 'WebSocket Client Connected');
@@ -18,7 +34,7 @@ class Client {
     }
 
     private prepareMessage (message: string) {
-        const payload = {Message: message, Type: "message"};
+        const payload = {Contents: message, Type: "message", ClientID: this.clientID};
         return JSON.stringify(payload);
     }
     
