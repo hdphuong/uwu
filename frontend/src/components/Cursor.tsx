@@ -1,21 +1,9 @@
-import { color } from "@mui/system";
 import React from "react";
 import useMousePosition from "./useMousePosition";
 const Cursor = () => {
-  const { clientX, clientY } = useMousePosition();
+  const { clientX, clientY} = useMousePosition();
   
   return (
-    <div 
-      style={{ 
-        position: "fixed",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 9999,
-        pointerEvents: "none",
-      }}
-    >
       <svg
         width={50}
         height={50}
@@ -34,7 +22,6 @@ const Cursor = () => {
           fill="purple"
         />
       </svg>
-    </div>
   );
 };
 

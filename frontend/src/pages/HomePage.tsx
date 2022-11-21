@@ -7,8 +7,8 @@ import OtherCursors from '../components/OtherCursors';
 
 const HomePage : FC = () => {
     const wsClient = useRef<Client| null>(null);
-    const [cursor, setCursor] = useState({ x: 0, y: 0 });
-    const { clientX, clientY } = useMousePosition();
+    const [cursors, setCursors] = useState<any>({});
+    const { clientX, clientY} = useMousePosition();
 
     useEffect(() => {
         function cleanup() {
@@ -19,7 +19,7 @@ const HomePage : FC = () => {
     }, []);
 
     useEffect(() => {
-        if (wsClient.current?.clientID != '') {
+        if (wsClient.current?.clientID !== '') {
             wsClient.current?.sendCursorToServer(clientX, clientY);
         }
     }, [clientX, clientY]);
@@ -28,11 +28,11 @@ const HomePage : FC = () => {
         wsClient.current.socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.Type === 'cursor') {
-                console.log(data.Contents);
                 const x = data.Contents.split(',')[0];
                 const y = data.Contents.split(',')[1];
-                setCursor({ x: parseInt(x), y: parseInt(y) });
-                console.log(cursor);
+                const key = data.ClientID;
+                setCursors({...cursors, [key] : [parseInt(x), parseInt(y)] });
+                console.log(cursors);
             }
         };
     };
@@ -40,8 +40,8 @@ const HomePage : FC = () => {
     return (
             <div>
                 <Cursor/>
-                <OtherCursors clientX={cursor.x || 0} clientY={cursor.y || 0}/>
                 <h1>Home</h1>
+                {cursors && Object.keys(cursors).map((key) => (<OtherCursors key={key} clientX={cursors[key][0]} clientY={cursors[key][1]}/>))}
                 <Link to="/chat">Chat</Link>
             </div>
     );

@@ -1,0 +1,9 @@
+
+
+.otherCursors {
+    fill: red;
+}
+.otherCursors:hover{
+    fill: aqua !important;
+    transform: scale(2);
+}
