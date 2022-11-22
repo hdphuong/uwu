@@ -1,9 +1,52 @@
-
-
-.otherCursors {
-    fill: red;
+.myCursor {
+    fill: rgb(229, 195, 245);
+    stroke: white;
+    stroke-width: 1%;
 }
-.otherCursors:hover{
-    fill: aqua !important;
-    transform: scale(2);
+.otherCursors {
+    fill: #c250ef;
+	transform-origin: center;
+    stroke:white;
+    stroke-width: 1%;
+
+}
+.otherCursors:hover {
+	animation: beat .3s infinite alternate;
+    cursor: pointer;
+}
+
+svg:not(:root) {
+    overflow: visible;
+}
+
+.heart {
+	font-size: 150px;
+	transform-origin: center;
+}
+
+.heart:hover {
+    background-color: #e00;
+	animation: beat .25s infinite alternate;
+    cursor: pointer;
+}
+
+.my-message {
+    border-radius: 8px;
+    font-size: 1.1rem;
+    background-color: rgba(256, 256, 256, 0.8);
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+.their-message {
+    border-radius: 8px;
+    font-size: 1.1rem;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 1rem;
+    color:azure;
+}
+
+/* Heart beat animation */
+@keyframes beat{
+	to { transform: scale(3); }
 }

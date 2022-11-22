@@ -8,19 +8,21 @@ class Client {
     socket: WebSocket;
     messages: Payload[] = [];
     clientID: string = '';
+    bool: boolean = false;
 
     constructor () {
         this.socket = new WebSocket('ws://localhost:8080/ws');
         this.socket.onmessage = (msg) => {
             const message : Payload = JSON.parse(msg.data);
-            console.log(message);
             if (message.Type === "init") {
                 if (this.clientID === '' ){
                     this.clientID = message.Contents;
                 }
             } else {
-                this.messages.push(message);
-                console.log("on message", msg);
+                if (message.Type === "message") {
+                    this.messages.push(message);
+                    this.bool = !this.bool;
+                }
             }
         }
         this.socket.onopen = () => {
@@ -33,6 +35,7 @@ class Client {
         this.socket.onerror = (error) => {
             console.log("Socket Error: ", error);
         };
+
     }
 
     private prepareMessage (message: string) {

@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import Cursor from '../components/Cursor';
 import useMousePosition from '../components/useMousePosition';
 import OtherCursors from '../components/OtherCursors';
+import './styles.css';
 
 const HomePage : FC = () => {
     const wsClient = useRef<Client| null>(null);
@@ -38,11 +39,10 @@ const HomePage : FC = () => {
     };
 
     return (
-            <div>
+            <div className='home'>
                 <Cursor/>
                 <h1>Home</h1>
                 {cursors && Object.keys(cursors).map((key) => (<OtherCursors key={key} clientX={cursors[key][0]} clientY={cursors[key][1]}/>))}
-                <Link to="/chat">Chat</Link>
             </div>
     );
 };

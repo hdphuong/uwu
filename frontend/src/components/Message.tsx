@@ -1,16 +1,18 @@
 
-import React, { useRef } from 'react';
-import Client, {Payload} from '../api/Client';
+import React from 'react';
+import {Payload} from '../api/Client';
+import "./styles.css";
 
 type Props = {
     clientID: string;
     message: Payload;
 }
 const Message: React.FC<Props> = ( {clientID, message} : Props) => {
-
+    const isOwnMessage = clientID === message.ClientID;
+    const className = isOwnMessage ? 'my-message' : 'their-message';
     return (
-        <div className="Message">
-            {message.ClientID == clientID ? "My" : "Their"}: {message.Contents}
+        <div className={className}>
+            {message.Contents}
         </div>
     );
 };
