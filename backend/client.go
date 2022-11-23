@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -52,9 +51,6 @@ func (c *Client) read() {
 			break
 		}
 
-		fmt.Print("Reading message: ")
-		fmt.Println(string(message))
-
 		var msg Message
 		json.Unmarshal(message, &msg)
 		if msg.Type == "cursor" {
@@ -83,14 +79,7 @@ func (c *Client) write() {
 					return
 				}
 			*/
-			fmt.Print("Writing message: ")
-			fmt.Println(string(message))
 			c.conn.WriteMessage(websocket.TextMessage, []byte(message))
-			for i := 0; i < len(c.send); i++ {
-				//w.Write([]byte("\n"))
-				c.conn.WriteMessage(websocket.TextMessage, []byte(message))
-				//w.Write(<-c.send)
-			}
 		}
 	}
 }

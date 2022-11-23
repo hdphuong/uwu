@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 type Server struct {
@@ -37,7 +36,6 @@ func (s *Server) run() {
 			if err := json.Unmarshal(message, &msg); err != nil {
 				continue
 			}
-			fmt.Printf("broadcasting message %s\n", string(message))
 			for client := range s.clients {
 				if client.clientID != nil && *client.clientID != msg.ClientID {
 					client.send <- message
